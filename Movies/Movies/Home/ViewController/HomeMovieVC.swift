@@ -8,15 +8,11 @@
 import UIKit
 
 class HomeMovieVC: UIViewController {
-
+    
     var screen: HomeMoviesScreen?
-    var data: [HomeModel] = [HomeModel(id: 1, title: "Órfã 2: A Origem", overview: "", releaseDate: "2022-07-27", image: nil, rankUser: 8.7),
-                             HomeModel(id: 2, title: "Minions 2: A Origem de Gru", overview: "", releaseDate: "2022-06-29", image: nil, rankUser: 8.0),
-                             HomeModel(id: 3, title: "Thor: Amor e Trovão", overview: "", releaseDate: "2022-07-06", image: nil, rankUser: 6.8),
-                             HomeModel(id: 4, title: "Avatar", overview: "", releaseDate: "2009-12-18", image: nil, rankUser: 8.8),
-                             HomeModel(id: 4, title: "Avatar", overview: "", releaseDate: "2009-12-18", image: nil, rankUser: 8.8),
-                             HomeModel(id: 4, title: "Avatar", overview: "", releaseDate: "2009-12-18", image: nil, rankUser: 8.8),
-                             HomeModel(id: 5, title: "Xapalau", overview: "", releaseDate: "2029-12-18", image: nil, rankUser: 0.1)]
+    var data: [Result] = []
+    
+    private let service: HomeService = HomeService()
     
     override func loadView() {
         screen = HomeMoviesScreen()
@@ -26,7 +22,22 @@ class HomeMovieVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         screen?.configTableView(delegate: self, dataSource: self)
+        fetchMovie()
     }
+
+    func fetchMovie(){
+        service.getMovieURLSession { result, failure in
+            if let result = result {
+                self.data = result
+            } else {
+                print("Deu ruim socorro")
+            }
+            DispatchQueue.main.async {
+                self.screen?.tableView.reloadData()
+            }
+        }
+    }
+    
 }
 
 extension HomeMovieVC: UITableViewDelegate, UITableViewDataSource {
