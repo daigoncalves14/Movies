@@ -6,38 +6,36 @@
 //
 
 import UIKit
+import AlamofireImage
 
 class HomeTableViewCell: UITableViewCell {
     
-    
-    
     static let identifier: String = "HomeTableViewCell"
     
-    
     lazy var imageMovie: UIImageView = {
-           let image = UIImageView()
-            image.translatesAutoresizingMaskIntoConstraints = false
-            image.backgroundColor = .red
-            image.clipsToBounds = true
-            image.layer.cornerRadius = 15
-            return image
-        }()
-
-        lazy var titleMovieLabel: UILabel = {
-            let label = UILabel()
-            label.translatesAutoresizingMaskIntoConstraints = false
-            label.textColor = .white
-            label.font = UIFont.systemFont(ofSize: 13, weight: .bold)
-            return label
-        }()
-
-        lazy var releaseDataMovieLabel: UILabel = {
-            let label = UILabel()
-            label.translatesAutoresizingMaskIntoConstraints = false
-            label.textColor = .white.withAlphaComponent(0.75)
-            label.font = UIFont.systemFont(ofSize: 13, weight: .bold)
-            return label
-        }()
+        let image = UIImageView()
+        image.translatesAutoresizingMaskIntoConstraints = false
+        image.backgroundColor = .red
+        image.clipsToBounds = true
+        image.layer.cornerRadius = 15
+        return image
+    }()
+    
+    lazy var titleMovieLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textColor = .white
+        label.font = UIFont.systemFont(ofSize: 13, weight: .bold)
+        return label
+    }()
+    
+    lazy var releaseDataMovieLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textColor = .white.withAlphaComponent(0.75)
+        label.font = UIFont.systemFont(ofSize: 13, weight: .bold)
+        return label
+    }()
     
     private lazy var textStackView: UIStackView = {
         let stack = UIStackView()
@@ -76,10 +74,11 @@ class HomeTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setupCell(movie: HomeModel){
+    func setupCell(movie: Result){
         titleMovieLabel.text = movie.title
         releaseDataMovieLabel.text = "Lançamento: \(movie.releaseDate.formatDate())"
-        
+        let url = URL(string: "https://image.tmdb.org/t/p/w500/\(movie.posterPath)") ?? URL(fileURLWithPath: "")
+        imageMovie.af.setImage(withURL: url)
     }
     
     func configElements(){
@@ -88,7 +87,7 @@ class HomeTableViewCell: UITableViewCell {
     
     func configConstraints(){
         NSLayoutConstraint.activate([
-     
+            
             mainStackView.topAnchor.constraint(equalTo: topAnchor, constant: 16),
             mainStackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -16.0),
             mainStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 24.0),
